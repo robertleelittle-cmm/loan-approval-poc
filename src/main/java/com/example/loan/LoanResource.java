@@ -3,7 +3,6 @@ package com.example.loan;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import io.quarkus.qute.Template;
-import io.quarkus.qute.TemplateInstance;
 import jakarta.ws.rs.core.MediaType;
 import org.kie.api.runtime.KieSession;
 
@@ -21,17 +20,17 @@ public class LoanResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public TemplateInstance getForm() {
-        return loanForm.instance();
+    public String getForm() {
+        return loanForm.instance().render();
     }
 
     @POST
     @Path("/approve")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
-    public TemplateInstance processForm(@FormParam("income") double income,
-                                       @FormParam("creditScore") int creditScore,
-                                       @FormParam("loanAmount") double loanAmount) {
+    public String processForm(@FormParam("income") double income,
+                             @FormParam("creditScore") int creditScore,
+                             @FormParam("loanAmount") double loanAmount) {
         LoanApplication app = new LoanApplication(income, creditScore, loanAmount);
         
         // Insert the loan application into the session
@@ -43,7 +42,8 @@ public class LoanResource {
         return results.data("income", income)
                      .data("creditScore", creditScore)
                      .data("loanAmount", loanAmount)
-                     .data("decision", app.getDecision());
+                     .data("decision", app.getDecision())
+                     .render();
     }
 
     @POST
