@@ -1,0 +1,34 @@
+package com.example.loan;
+
+import com.example.loan.LoanApplication;
+
+query "GetApprovedLoans"
+    $app: LoanApplication(decision == "Approve")
+end
+
+rule "Approve High Income Low Risk"
+when
+    $app: LoanApplication(income > 100000, creditScore > 700, loanAmount < 500000)
+then
+    modify($app) {
+        setDecision("Approve")
+    };
+end
+
+rule "Reject Low Income"
+when
+    $app: LoanApplication(income < 50000)
+then
+    modify($app) {
+        setDecision("Reject")
+    };
+end
+
+rule "Review Otherwise"
+when
+    $app: LoanApplication(decision == null)
+then
+    modify($app) {
+        setDecision("Review")
+    };
+end

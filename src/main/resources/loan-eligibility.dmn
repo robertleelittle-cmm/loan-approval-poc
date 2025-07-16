@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="loan-eligibility" name="Loan Eligibility" namespace="http://www.example.org/loan-eligibility">
+  <itemDefinition id="_income" name="income" typeRef="number"/>
+  <itemDefinition id="_creditScore" name="creditScore" typeRef="number"/>
+  <itemDefinition id="_loanAmount" name="loanAmount" typeRef="number"/>
+  <itemDefinition id="_decision" name="decision" typeRef="string"/>
+  <decision id="eligibilityDecision" name="Eligibility Decision">
+    <decisionTable hitPolicy="UNIQUE" id="_table">
+      <input id="_incomeInput" label="Income">
+        <inputExpression typeRef="number">
+          <text>income</text>
+        </inputExpression>
+      </input>
+      <input id="_creditInput" label="Credit Score">
+        <inputExpression typeRef="number">
+          <text>creditScore</text>
+        </inputExpression>
+      </input>
+      <input id="_amountInput" label="Loan Amount">
+        <inputExpression typeRef="number">
+          <text>loanAmount</text>
+        </inputExpression>
+      </input>
+      <output id="_decisionOutput" label="Decision" typeRef="string"/>
+      <rule id="_rule1">
+        <inputEntry id="_entry1">
+          <text>&gt; 100000</text>
+        </inputEntry>
+        <inputEntry id="_entry2">
+          <text>&gt; 700</text>
+        </inputEntry>
+        <inputEntry id="_entry3">
+          <text>&lt; 500000</text>
+        </inputEntry>
+        <outputEntry id="_out1">
+          <text>"Approve"</text>
+        </outputEntry>
+      </rule>
+      <rule id="_rule2">
+        <inputEntry id="_entry4">
+          <text>&lt; 50000</text>
+        </inputEntry>
+        <inputEntry id="_entry5">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="_entry6">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="_out2">
+          <text>"Reject"</text>
+        </outputEntry>
+      </rule>
+      <rule id="_rule3">
+        <inputEntry id="_entry7">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="_entry8">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="_entry9">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="_out3">
+          <text>"Review"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData id="_incomeData" name="income"/>
+  <inputData id="_creditData" name="creditScore"/>
+  <inputData id="_amountData" name="loanAmount"/>
+</definitions>
