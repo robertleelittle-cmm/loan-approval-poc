@@ -1,27 +1,36 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="loan-eligibility" name="Loan Eligibility" namespace="http://www.example.org/loan-eligibility">
-  <itemDefinition id="_income" name="income" typeRef="number"/>
-  <itemDefinition id="_creditScore" name="creditScore" typeRef="number"/>
-  <itemDefinition id="_loanAmount" name="loanAmount" typeRef="number"/>
-  <itemDefinition id="_decision" name="decision" typeRef="string"/>
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20230324/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/" xmlns:feel="https://www.omg.org/spec/DMN/20230324/FEEL/" xmlns:kie="https://kie.org/dmn/extensions/1.0" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="loan-eligibility" name="Loan Eligibility" namespace="http://www.example.org/loan-eligibility">
+  <itemDefinition id="_income" name="income" typeRef="number" />
+  <itemDefinition id="_creditScore" name="creditScore" typeRef="number" />
+  <itemDefinition id="_loanAmount" name="loanAmount" typeRef="number" />
+  <itemDefinition id="_decision" name="decision" typeRef="string" />
   <decision id="eligibilityDecision" name="Eligibility Decision">
+    <informationRequirement id="_3A3CB730-24D4-4A13-B59A-AA86EAE86793">
+      <requiredInput href="#_amountData" />
+    </informationRequirement>
+    <informationRequirement id="_08658332-F383-4E54-8328-7CA064DA93F1">
+      <requiredInput href="#_creditData" />
+    </informationRequirement>
+    <informationRequirement id="_430505DD-BF4D-4DF5-BBF7-1C98BBFCCA57">
+      <requiredInput href="#_incomeData" />
+    </informationRequirement>
     <decisionTable hitPolicy="UNIQUE" id="_table">
       <input id="_incomeInput" label="Income">
-        <inputExpression typeRef="number">
+        <inputExpression typeRef="number" id="_F06AEAC9-08E8-4B90-B6AC-21D765D43014">
           <text>income</text>
         </inputExpression>
       </input>
       <input id="_creditInput" label="Credit Score">
-        <inputExpression typeRef="number">
+        <inputExpression typeRef="number" id="_0A356F91-2F65-45B7-93CD-ECB471077265">
           <text>creditScore</text>
         </inputExpression>
       </input>
       <input id="_amountInput" label="Loan Amount">
-        <inputExpression typeRef="number">
+        <inputExpression typeRef="number" id="_A07DEAAA-5099-4CFF-9D04-333887936723">
           <text>loanAmount</text>
         </inputExpression>
       </input>
-      <output id="_decisionOutput" label="Decision" typeRef="string"/>
+      <output id="_decisionOutput" label="Decision" typeRef="string" />
       <rule id="_rule1">
         <inputEntry id="_entry1">
           <text>&gt; 100000</text>
@@ -33,7 +42,7 @@
           <text>&lt; 500000</text>
         </inputEntry>
         <outputEntry id="_out1">
-          <text>"Approve"</text>
+          <text>&quot;Approve&quot;</text>
         </outputEntry>
       </rule>
       <rule id="_rule2">
@@ -47,7 +56,7 @@
           <text>-</text>
         </inputEntry>
         <outputEntry id="_out2">
-          <text>"Reject"</text>
+          <text>&quot;Reject&quot;</text>
         </outputEntry>
       </rule>
       <rule id="_rule3">
@@ -61,12 +70,45 @@
           <text>-</text>
         </inputEntry>
         <outputEntry id="_out3">
-          <text>"Review"</text>
+          <text>&quot;Review&quot;</text>
         </outputEntry>
       </rule>
     </decisionTable>
   </decision>
-  <inputData id="_incomeData" name="income"/>
-  <inputData id="_creditData" name="creditScore"/>
-  <inputData id="_amountData" name="loanAmount"/>
+  <inputData id="_incomeData" name="income" />
+  <inputData id="_creditData" name="creditScore" />
+  <inputData id="_amountData" name="loanAmount" />
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_706F2D16-0392-4C18-B7E9-E5763075CC52" name="Default DRD" useAlternativeInputDataShape="false">
+      <di:extension>
+        <kie:ComponentsWidthsExtension>
+          <kie:ComponentWidths />
+        </kie:ComponentsWidthsExtension>
+      </di:extension>
+      <dmndi:DMNShape id="_209D0CFD-BB3B-4518-93AE-0FDC3EF6EBF9" dmnElementRef="eligibilityDecision">
+        <dc:Bounds x="600" y="220" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_DBD8C5FF-6C8F-49C8-B7B6-6A2D16EC6DF5" dmnElementRef="_incomeData">
+        <dc:Bounds x="240" y="120" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_BDA5E276-C3AF-49E4-9684-0531FDF96307" dmnElementRef="_creditData">
+        <dc:Bounds x="240" y="220" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_28D86C19-1364-4682-8AC7-014B38C252BB" dmnElementRef="_amountData">
+        <dc:Bounds x="240" y="320" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="_4F3805E7-BB39-4912-AC8F-603141617596" dmnElementRef="_3A3CB730-24D4-4A13-B59A-AA86EAE86793" sourceElement="_28D86C19-1364-4682-8AC7-014B38C252BB" targetElement="_209D0CFD-BB3B-4518-93AE-0FDC3EF6EBF9">
+        <di:waypoint x="320" y="360" />
+        <di:waypoint x="600" y="260" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_063149D9-C6A7-4CE7-B0B3-1F65B241A598" dmnElementRef="_08658332-F383-4E54-8328-7CA064DA93F1" sourceElement="_BDA5E276-C3AF-49E4-9684-0531FDF96307" targetElement="_209D0CFD-BB3B-4518-93AE-0FDC3EF6EBF9">
+        <di:waypoint x="320" y="260" />
+        <di:waypoint x="600" y="260" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_F8C8C162-AA6E-4EAD-9251-21863DC56C8F" dmnElementRef="_430505DD-BF4D-4DF5-BBF7-1C98BBFCCA57" sourceElement="_DBD8C5FF-6C8F-49C8-B7B6-6A2D16EC6DF5" targetElement="_209D0CFD-BB3B-4518-93AE-0FDC3EF6EBF9">
+        <di:waypoint x="320" y="160" />
+        <di:waypoint x="600" y="260" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
 </definitions>
