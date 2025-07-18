@@ -73,6 +73,34 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -131,6 +159,19 @@
                     </systemPropertyVariables>
                     <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                 </configuration>
+            </plugin>
+            <plugin>
+              <groupId>io.smallrye</groupId>
+              <artifactId>jandex-maven-plugin</artifactId>
+              <version>3.1.7</version>  <!-- Or 3.3.1 if you want the latest -->
+               <executions>
+                  <execution>
+                        <id>make-index</id>
+                      <goals>
+                            <goal>jandex</goal>
+                      </goals>
+                   </execution>
+             </executions>
             </plugin>
         </plugins>
     </build>
