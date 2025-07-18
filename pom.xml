@@ -173,6 +173,28 @@
                    </execution>
              </executions>
             </plugin>
+            <plugin>
+             <groupId>org.apache.maven.plugins</groupId>
+             <artifactId>maven-compiler-plugin</artifactId>
+             <version>3.13.0</version>  <!-- Latest stable for Java 17+ as of mid-2025; compatible with BAMOE -->
+              <configuration>
+                  <source>17</source>  <!-- Or 21 if using newer Java -->
+                   <target>17</target>
+                  <compilerArgs>
+                      <!-- Optional: Add args for better debugging if needed -->
+                     <arg>-parameters</arg>  <!-- Helps with reflection in Quarkus/Kogito -->
+                 </compilerArgs>
+              </configuration>
+              <executions>
+                  <execution>
+                     <id>default-compile</id>
+                      <phase>compile</phase>  <!-- Forces it to run in compile phase, after sources are ready -->
+                      <goals>
+                          <goal>compile</goal>
+                       </goals>
+                  </execution>
+              </executions>
+            </plugin>
         </plugins>
     </build>
 
