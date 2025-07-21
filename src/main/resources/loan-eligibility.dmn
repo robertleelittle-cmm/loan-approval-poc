@@ -5,6 +5,7 @@
   <itemDefinition id="_loanAmount" name="loanAmount" typeRef="number" />
   <itemDefinition id="_decision" name="decision" typeRef="string" />
   <decision id="eligibilityDecision" name="Eligibility Decision">
+    <variable id="_55671204-86EB-4140-8EF6-67698FE17DAE" name="Eligibility Decision" />
     <informationRequirement id="_3A3CB730-24D4-4A13-B59A-AA86EAE86793">
       <requiredInput href="#_amountData" />
     </informationRequirement>
@@ -14,7 +15,7 @@
     <informationRequirement id="_430505DD-BF4D-4DF5-BBF7-1C98BBFCCA57">
       <requiredInput href="#_incomeData" />
     </informationRequirement>
-    <decisionTable hitPolicy="UNIQUE" id="_table">
+    <decisionTable hitPolicy="UNIQUE" id="_table" label="Eligibility Decision">
       <input id="_incomeInput" label="Income">
         <inputExpression typeRef="number" id="_F06AEAC9-08E8-4B90-B6AC-21D765D43014">
           <text>income</text>
@@ -47,7 +48,7 @@
       </rule>
       <rule id="_rule2">
         <inputEntry id="_entry4">
-          <text>&lt; 50000</text>
+          <text>&lt; 50001</text>
         </inputEntry>
         <inputEntry id="_entry5">
           <text>-</text>

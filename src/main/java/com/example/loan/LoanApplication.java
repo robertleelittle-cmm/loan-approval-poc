@@ -3,6 +3,9 @@ package com.example.loan;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoanApplication {
+    @JsonProperty("name")
+    private String name;
+
     @JsonProperty("income")
     private double income;
 
@@ -26,6 +29,14 @@ public class LoanApplication {
     }
 
     // Getters and Setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public double getIncome() {
         return income;
     }
