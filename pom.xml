@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.example</groupId>
     <artifactId>loan-approval-poc</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <compiler-plugin.version>3.14.0</compiler-plugin.version>
-        <maven.compiler.release>17</maven.compiler.release>
+        <quarkus.version>3.8.3</quarkus.version>
+        <drools.version>8.44.0.Final</drools.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.24.3</quarkus.platform.version>
-        <skipITs>true</skipITs>
-        <surefire-plugin.version>3.5.3</surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>${quarkus.platform.group-id}</groupId>
-                <artifactId>${quarkus.platform.artifact-id}</artifactId>
-                <version>${quarkus.platform.version}</version>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <version>${quarkus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.drools</groupId>
+                <artifactId>drools-bom</artifactId>
+                <version>${drools.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -44,18 +50,20 @@
             <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
         </dependency>
 
-        <!-- Kogito for rules, decisions, processes -->
+        <!-- DMN dependencies -->
         <dependency>
-            <groupId>org.kie.kogito</groupId>
-            <artifactId>kogito-quarkus</artifactId>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-dmn-core</artifactId>
+            <version>${drools.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kie.kogito</groupId>
-            <artifactId>kogito-quarkus-decisions</artifactId>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-dmn-feel</artifactId>
+            <version>${drools.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kie.kogito</groupId>
-            <artifactId>kogito-api-incubation-common</artifactId>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-xml-support</artifactId>
         </dependency>
 
         <!-- Web UI with Qute -->
@@ -64,24 +72,20 @@
             <artifactId>quarkus-resteasy-reactive-qute</artifactId>
         </dependency>
 
-        <!-- OpenShift deployment support -->
+        <!-- Test dependencies -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-openshift</artifactId>
+            <artifactId>quarkus-junit5</artifactId>
+            <scope>test</scope>
         </dependency>
-
-        <!-- Lombok for POJO boilerplate reduction (optional but used in LoanApplication) -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.32</version>
-            <scope>provided</scope>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
-            <!-- Quarkus Maven plugin for build and code generation -->
             <plugin>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
@@ -96,8 +100,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Maven Compiler with forced order for codegen fixes -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -109,46 +111,9 @@
                         <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Jandex for class indexing (fixes OpenShift resolution issues) -->
-            <plugin>
-                <groupId>io.smallrye</groupId>
-                <artifactId>jandex-maven-plugin</artifactId>
-                <version>3.1.7</version>
-                <executions>
-                    <execution>
-                        <id>make-index</id>
-                        <goals>
-                            <goal>jandex</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Maven JAR for generating pom.properties (fixes KIE warning) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
 
 </project>
+

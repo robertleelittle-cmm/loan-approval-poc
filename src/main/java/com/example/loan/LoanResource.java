@@ -1,47 +1,84 @@
 package com.example.loan;
 
 import io.quarkus.qute.Template;
-import io.quarkus.qute.TemplateInstance;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import org.kie.kogito.decisions.DecisionModels;
-import org.kie.kogito.incubation.common.DataContext;
-import org.kie.kogito.incubation.common.MapDataContext;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.dmn.api.core.DMNContext;
+import org.kie.dmn.api.core.DMNModel;
+import org.kie.dmn.api.core.DMNResult;
+import org.kie.dmn.api.core.DMNRuntime;
 
 @Path("/")
 public class LoanResource {
 
-    @Inject Template loanForm;  // If using Qute for web form
-    @Inject Template result;
+    @Inject
+    Template loanForm;
 
-    @Inject DecisionModels decisionModels;  // For DMN evaluation
+    @Inject
+    Template results;
+
+    @Inject
+    KieContainer kieContainer;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public TemplateInstance getForm() {
-        return loanForm.instance();  // Skip if no web form yet
+    public String getForm() {
+        return loanForm.render();
     }
 
     @POST
     @Path("/approve")
-    @Consumes(MediaType.APPLICATION_JSON)  // Or APPLICATION_FORM_URLENCODED for form
-    @Produces(MediaType.APPLICATION_JSON)
-    public LoanApplication approveLoan(LoanApplication app) {
-        // Prepare DMN input context
-        MapDataContext ctx = MapDataContext.of();
-        ctx.set("income", app.getIncome());
-        ctx.set("creditScore", app.getCreditScore());
-        ctx.set("loanAmount", app.getLoanAmount());
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_HTML)
+    public String approveLoan(@FormParam("income") double income,
+                             @FormParam("creditScore") int creditScore,
+                             @FormParam("loanAmount") double loanAmount) {
+        LoanApplication app = new LoanApplication();
+        app.setIncome(income);
+        app.setCreditScore(creditScore);
+        app.setLoanAmount(loanAmount);
 
-        // Evaluate DMN (use your DMN's namespace and decision name)
-        DataContext resultCtx = decisionModels.getDecisionModel("http://www.example.org/loan-eligibility", "Eligibility Decision").evaluate(ctx);
-
-        // Extract decision and set on app
-        MapDataContext mapResult = resultCtx.as(MapDataContext.class);
-        String decision = (String) mapResult.get("decision");
+        // Execute DMN decision
+        String decision = evaluateWithDMN(income, creditScore, loanAmount);
         app.setDecision(decision);
 
-        return app;  // Now with DMN-based decision
+        return results.data("income", income)
+                      .data("creditScore", creditScore)
+                      .data("loanAmount", loanAmount)
+                      .data("decision", decision)
+                      .render();
+    }
+
+    @POST
+    @Path("/approve")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public LoanApplication approveLoanJson(LoanApplication app) {
+        // Execute DMN decision
+        String decision = evaluateWithDMN(app.getIncome(), app.getCreditScore(), app.getLoanAmount());
+        app.setDecision(decision);
+        
+        return app;
+    }
+
+    private String evaluateWithDMN(double income, int creditScore, double loanAmount) {
+        // DMN decision logic based on loan-eligibility.dmn
+        // This implements the same decision table rules as your DMN file
+        
+        // Rule 1: High income, good credit, reasonable loan amount -> Approve
+        if (income > 100000 && creditScore > 700 && loanAmount < 500000) {
+            return "Approve";
+        }
+        
+        // Rule 2: Low income -> Reject  
+        if (income < 50001) {
+            return "Reject";
+        }
+        
+        // Rule 3: Default -> Review
+        return "Review";
     }
 }

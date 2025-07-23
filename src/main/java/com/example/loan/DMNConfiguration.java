@@ -4,16 +4,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
 
 @ApplicationScoped
-public class DroolsConfiguration {
+public class DMNConfiguration {
     
     @Produces
     @ApplicationScoped
-    public KieSession kieSession() {
+    public KieContainer kieContainer() {
         KieServices kieServices = KieServices.Factory.get();
-        KieContainer kieContainer = kieServices.getKieClasspathContainer();
-        return kieContainer.newKieSession();
+        return kieServices.getKieClasspathContainer();
     }
 }
